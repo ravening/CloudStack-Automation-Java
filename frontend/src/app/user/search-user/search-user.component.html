@@ -1,0 +1,31 @@
+<div class="container">
+  <h2 class="text-center">Search for a Cloudstack User</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Enter the user name:</label>
+      <input type="text" formControlName="title" placeholder="Enter the user name" name="title" class="form-control" id="title">
+    </div>
+
+    <button class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<div *ngIf="output !== null; else nullResponse">
+<pre>
+{{output | json}}
+  <!--  {{output | json}}-->
+</pre>
+</div>
+
+<ng-template #nullResponse>
+  <h5>Unable to find the user</h5>
+</ng-template>
+
+
+<!--<form #form="ngForm" (ngSubmit)="logForm(form.value)" ngNativeValidate>-->
+<!--  <label>Username:</label>-->
+<!--  <input type="text" name="username" ngModel required>-->
+<!--  <br/>-->
+
+<!--  <button class="mat-raised-button" type="submit">Submit</button>-->
+<!--</form>-->

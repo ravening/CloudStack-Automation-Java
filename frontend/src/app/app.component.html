@@ -1,0 +1,29 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+
+<button class="mat-raised-button" (click)="listZones()">List zones</button>
+<br>
+<br>
+<br>
+<button class="mat-raised-button" (click)="handleVirtualMachines()">Search for Virtual machines</button>
+<br/>
+<br>
+<br>
+<button class="mat-raised-button" (click)="handleDomains()">Search for Domain</button>
+<br/>
+<br/>
+<br>
+<br>
+<button class="mat-raised-button" (click)="handleUsers()">Search for users</button>
+<br/>
+<br>
+<br>
+<button class="mat-raised-button" (click)="handleAccounts()">Search for Account</button>
+<br/>
+<br/>
+<br/>
+<router-outlet></router-outlet>

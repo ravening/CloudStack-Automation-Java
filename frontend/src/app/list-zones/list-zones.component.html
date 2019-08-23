@@ -1,0 +1,12 @@
+<div *ngIf="listZonesOutput !== null; else nullResponse">
+<pre>
+  {{listZonesOutput | json}}
+</pre>
+</div>
+
+<ng-template #nullResponse>
+  <h5>Unable to list the zone</h5>
+</ng-template>
+<br>
+<br>
+<button class="mat-raised-button" (click)="goBack()">Back</button>

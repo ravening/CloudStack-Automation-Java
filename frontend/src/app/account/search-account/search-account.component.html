@@ -1,0 +1,22 @@
+<div class="container">
+  <h2 class="text-center">Search for a Cloudstack Account</h2>
+  <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Enter the account name:</label>
+      <input type="text" formControlName="title" placeholder="Enter the account name" name="title" class="form-control" id="title">
+    </div>
+
+    <button class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<div *ngIf="output !== null; else nullResponse">
+<pre>
+{{output | json}}
+  <!--  {{output | json}}-->
+</pre>
+</div>
+
+<ng-template #nullResponse>
+  <h5>Unable to find the user</h5>
+</ng-template>
