@@ -108,8 +108,26 @@ Navigate to the following link in your browser
 http://localhost:8080
 ```
 
+## Building a docker image
+
+Run the below command to create a docker iamge
+
+```
+./mvnw install dockerfile:build
+```
+
+This will create a docker image with name
+
+```
+cloudstack-automation
+```
+
+Run the docker image using the command
+
+```bash
+docker run -p 8080:8080 -t cloudstack-automation
+```
+
 ## Authors
 
 * **Rakesh Venkatesh** - *Initial work* - [rakgenius](https://github.com/rakgenius)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
