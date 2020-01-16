@@ -21,7 +21,7 @@ Angular CLI
 
 A step by step series of instructions that tell you how to start the project
 
-Download the project from githhub
+Download the project from github
 
 ```
 git clone <repo url>
@@ -89,7 +89,13 @@ Make sure that the file "frontend/angular.json" contains the following line
 The "outputPath" tells the maven to build frontend packages and put
 those templates files into public folder of java project
 
-Build the project using the command
+Install the necessary angular dependencies
+```bash
+cd frontend
+npm install --save-dev @angular-devkit/build-angular
+```
+
+Build the project from the top directory using the command
 
 ```bash
 mvn package
@@ -110,7 +116,7 @@ http://localhost:8080
 
 ## Building a docker image
 
-Run the below command to create a docker iamge
+Run the below command to create a docker image
 
 ```
 ./mvnw install dockerfile:build
@@ -130,4 +136,4 @@ docker run -p 8080:8080 -t cloudstack-automation
 
 ## Authors
 
-* **Rakesh Venkatesh** - *Initial work* - [rakgenius](https://github.com/rakgenius)
+* **Rakesh Venkatesh** - *Initial work* - [ravening](https://github.com/ravening)
