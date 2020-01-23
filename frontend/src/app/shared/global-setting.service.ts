@@ -5,11 +5,12 @@ import {Observable} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class DomainApiService {
-  url = "http://localhost:8080/domain/";
+export class GlobalSettingService {
+  url = "http://localhost:8080/setting/";
   constructor(private http: HttpClient) { }
 
-  getDomainByName(name: string): Observable<string> {
+  getSettingByName(name: string): Observable<string> {
+    console.log('url is ' + this.url);
     return this.http.get<string>(this.url + name);
   }
 }

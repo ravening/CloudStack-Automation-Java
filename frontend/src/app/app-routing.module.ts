@@ -5,6 +5,7 @@ import {ListVirtualMachinesComponent} from "./list-virtual-machines/list-virtual
 import {SearchUserComponent} from "./user/search-user/search-user.component";
 import {SearchAccountComponent} from "./account/search-account/search-account.component";
 import {DomainComponent} from "./domain/domain.component";
+import {GlobalSettingComponent} from "./global-setting/global-setting.component";
 
 const routes: Routes = [
   {
@@ -24,6 +25,9 @@ const routes: Routes = [
   }, {
     path: 'searchdomain',
     component: DomainComponent
+  }, {
+    path: 'searchsettings',
+    component: GlobalSettingComponent
   }
 ];
 

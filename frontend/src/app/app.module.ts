@@ -16,6 +16,7 @@ import {AccountModule} from "./account/account.module";
 import {UserApiService} from "./shared/user-api.service";
 import { DomainComponent } from './domain/domain.component';
 import {DomainApiService} from "./shared/domain-api.service";
+import { GlobalSettingComponent } from './global-setting/global-setting.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {DomainApiService} from "./shared/domain-api.service";
     ZoneComponent,
     ListZonesComponent,
     ListVirtualMachinesComponent,
-    DomainComponent
+    DomainComponent,
+    GlobalSettingComponent
   ],
   imports: [
     BrowserModule,

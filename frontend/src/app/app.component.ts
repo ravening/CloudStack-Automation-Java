@@ -35,4 +35,8 @@ export class AppComponent implements OnInit{
   handleDomains() {
     this.route.navigate(['searchdomain']);
   }
+
+  handleSettings() {
+    this.route.navigate(['searchsettings']);
+  }
 }

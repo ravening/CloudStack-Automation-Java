@@ -10,8 +10,6 @@ export class UserApiService {
   constructor(private  http: HttpClient) { }
 
   searchUser(name: string): Observable<string> {
-    //let n = "rakesh venkatesh";
-    //return of(n);
     return this.http.get<string>(this.url + '/username/' + name);
   }
 }
