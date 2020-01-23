@@ -169,6 +169,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>cloudstack</finalName>
     </build>
 
 </project>
