@@ -1,5 +1,5 @@
-FROM openjdk:11
-COPY ./target/cloudstack-automation-0.0.1.jar /var/tmp
-WORKDIR /var/tmp
-RUN sh -c 'touch cloudstack-automation-0.0.1.jar'
-ENTRYPOINT ["java","-jar","cloudstack-automation-0.0.1.jar"]
+FROM adoptopenjdk/openjdk11:alpine-jre
+ARG JAR_FILE=target/cloudstack.jar
+WORKDIR  /opt/app
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
