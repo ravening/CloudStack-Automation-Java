@@ -4,9 +4,13 @@ import com.rakeshv.cloudstackautomation.models.CloudstackHandle;
 import com.rakeshv.cloudstackautomation.models.Command;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +30,20 @@ public class CommandBuilderService {
     private CloudstackApi cloudstackApi;
     @Autowired
     private Environment environment;
-
-    private static final String USA = "usa";
-    private static final String EUROPE = "europe";
-    private static final String ASIA = "asia";
+    @Value("${cloudstack.platforms}")
+    private String platformsList;
 
     public HashMap<String, CloudstackHandle> platformMap;
-    List<Callable<String>> callableList = new ArrayList<>();
-    List<String> resultList = new ArrayList<>();
-    static String[] platforms = new String[]{USA, EUROPE, ASIA};
-    static final int NUMBER_OF_THREADS = platforms.length;
+    static String[] platforms;
+    int NUMBER_OF_THREADS;
+    ExecutorService executorService;
 
     @PostConstruct
     private void constructHandlers() {
         platformMap = new HashMap<>();
+        platforms = platformsList.split(",");
+        NUMBER_OF_THREADS = platforms.length;
+        executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
         for (String platform : platforms) {
             String url = environment.getProperty(platform + ".url");
@@ -74,42 +79,41 @@ public class CommandBuilderService {
         return cloudstackApi.execute(handle, command);
     }
 
-    public String executeonAllPlatforms(String command, HashMap<String, String> parameters) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        callableList = Arrays.asList(platforms)
-                .stream()
-                .parallel()
-                .map(name -> {
-                    Callable<String> callable = () -> {
-                        String response = executeCommand(command, parameters, name);
-                        if (response.contains("count")) {
-                            log.info("Response from {} is {}", name, response);
-                            response = "{\"" + name + "\":" + response + "}";
-                            arrayList.add(response);
-                            return response;
-                        }
-                        return null;
-                    };
-                    return callable;
-                })
+    private CompletableFuture<String> getResponse(String command, HashMap<String, String> parameters, String platform) {
+        return CompletableFuture.supplyAsync( () -> {
+            String response = executeCommand(command, parameters, platform);
+            if (response.contains("count")) {
+                log.info("Response from {} is {}", platform, response);
+                response = "{\"" + platform + "\":" + response + "}";
+                return response;
+            }
+            return null;
+        }, executorService).exceptionally(ex -> {
+            log.error("Something worng {}", ex.getMessage());
+            return null;
+        });
+    }
+    public String executeonAllPlatforms(String command, HashMap<String, String> parameters) throws ExecutionException, InterruptedException {
+        List<CompletableFuture<String>> completableFutures = Arrays.stream(platforms)
+                .map(platform -> getResponse(command, parameters, platform))
                 .collect(Collectors.toList());
 
-        ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+        CompletableFuture<List<String>> allCompletables =
+                CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[completableFutures.size()]))
+                .thenApplyAsync(future -> {
+                    return completableFutures.stream().parallel()
+                            .map(CompletableFuture::join)
+                            .collect(Collectors.toList());
+                });
 
-        try {
-            List<Future<String>> futures = executorService.invokeAll(callableList);
-//            for (Future<String> future : futures) {
-//                try {
-//                    arrayList.add(future.get());
-//                } catch (ExecutionException e) {
-//                    log.error("Exception happneed {}", e.getLocalizedMessage());
-//                }
-//            }
-        } catch (InterruptedException e) {
-            log.error("Exception happened {}", e.getMessage());
-        }
+        CompletableFuture completableFuture =
+                allCompletables.thenApplyAsync(result -> {
+                    return result.stream()
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+                });
 
-        String finalResponse = String.join(",", arrayList);
-        return "[" + finalResponse + "]";
+        log.info("final response {}", completableFuture.get());
+        return completableFuture.get().toString();
     }
 }

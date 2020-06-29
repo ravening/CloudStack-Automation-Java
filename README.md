@@ -57,26 +57,6 @@ asia.apiKey=
 asia.secretKey=
 ```
 
-Once this is done, you need to modify the variables in the file
-
-```bash
-src/main/java/com.rakeshv.cloudstackautomation/service/CommandBuilderService.java
-```
-
-There are three predefined static variables
-
-```bash
-private static final String USA = "usa";
-private static final String EUROPE = "europe";
-private static final String ASIA = "asia";
-```
-
-You also need to change the ArrayList containing the platform names.
-
-```bash
-static String[] platforms = new String[]{USA, EUROPE, ASIA};
-```
-
 Once these changes are done, you are all good to go.
 Only steps left is to build the packages and start the project
 
@@ -98,14 +78,14 @@ npm install --save-dev @angular-devkit/build-angular
 Build the project from the top directory using the command
 
 ```bash
-mvn package
+mvn package -DskipTests
 ```
 
 This will generate the jar file in the target directory
 Now run the project using
 
 ```bash
-java -jar target/cloudstack-automation-0.0.1.jar
+java -jar target/cloudstack-automation.jar
 ```
 
 Navigate to the following link in your browser

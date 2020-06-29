@@ -1,6 +1,8 @@
 package com.rakeshv.cloudstackautomation.service;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,13 @@ public class AccountService {
         HashMap<String,String> parameters = new HashMap<>();
         parameters.putIfAbsent("keyword", accountName);
         parameters.putIfAbsent("listall", "true");
-        return commandBuilderService.executeonAllPlatforms("listAccounts", parameters);
+        try {
+            return commandBuilderService.executeonAllPlatforms("listAccounts", parameters);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
